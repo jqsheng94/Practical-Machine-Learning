@@ -4,7 +4,7 @@
 
 
 ###Data Cleaning
-First, we load all the packages that will be used in this project. 
+Before starting the project, load machine learning and plot packages that will be used in this project. 
 ```{r}
 library(caret)
 library(rpart)
