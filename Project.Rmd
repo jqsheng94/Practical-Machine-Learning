@@ -1,7 +1,15 @@
 
 ## Pratical Machines Learning Project-Assignment Writeup
 
-###Data Cleaning
+```{r}
+library(Hmisc)
+library(caret)
+library(randomForest)
+library(foreach)
+library(doParallel)
+set.seed(2048)
+options(warn=-1)
 
+###Data Cleaning
 First 
 
