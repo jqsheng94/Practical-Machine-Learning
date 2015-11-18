@@ -1,7 +1,7 @@
 
 # Pratical Machines Learning Project-Assignment Writeup
 
-# Data Cleaning
+##Data Cleaning
 
 First 
 
