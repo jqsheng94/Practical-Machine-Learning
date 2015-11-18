@@ -1,16 +1,14 @@
 
 ## Pratical Machines Learning Project-Assignment Writeup
 
-```{r}
-library(Hmisc)
-library(caret)
-library(randomForest)
-library(foreach)
-library(doParallel)
-set.seed(2048)
-options(warn=-1)
-```
+
 
 ###Data Cleaning
-First 
-
+First, we load all the packages that will be used in this project. 
+```{r}
+library(caret)
+library(rpart)
+library(rattle)
+library(rpart.plot)
+library(randomForest)
+```
