@@ -9,6 +9,7 @@ library(foreach)
 library(doParallel)
 set.seed(2048)
 options(warn=-1)
+```
 
 ###Data Cleaning
 First 
