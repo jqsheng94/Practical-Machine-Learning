@@ -42,7 +42,7 @@ nsvvariable
 
 finaltesting1=testing_document[,-badcols]
 ```
-
+After removing these new zero variance variables, we narrow it down to 132 variables for training, testing and prediction set. But some of the variables have no single value in it, so next step is to remove these variables with missing values.
 
 ```{r}
 missing=which(colSums(is.na(training1))>0)
@@ -58,7 +58,7 @@ missing=which(colSums(is.na(finaltesting1))>0)
 finaltesting2=finaltesting1[,-c(missing)]
 dim(finaltesting2)
 ```
-
+Now, we only have 58 variables in these three sets. 
 
 ### Model selection and evaluation
 
