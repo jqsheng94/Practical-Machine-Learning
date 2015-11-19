@@ -19,6 +19,15 @@ test_source="http://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
 training_document=read.csv(url(train_source), na.strings=c("NA","#DIV/0!",""))
 testing_document=read.csv(url(test_source), na.strings=c("NA","#DIV/0!",""))
 ```
+
+### Cross Validation
+After loading the data, it shows that training set has 19622 rows of data and testing set has 20 rows of data with 160 variables.
+```{r}
+intrain=createDataPartition(training_document $classe, p=0.6, list=FALSE)
+training = training_document [intrain, ]
+testing= training_document [-intrain, ]
+dim(training); dim(testing)
+```
 ### Feagure Selection
 
 ### Model selection and evaluation
