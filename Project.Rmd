@@ -39,6 +39,9 @@ training1=training[,-badcols]
 testing1=testing[,-badcols]
 nsvvariable=names(training1)
 nsvvariable
+
+finaltesting1=testing_document[,-badcols]
+
 ```
 
 
