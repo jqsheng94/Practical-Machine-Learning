@@ -88,6 +88,46 @@ Now, we only have 59 variables in these three sets. But the first column is a
 ```
 
 ### Model selection and evaluation
+After rerange the data into proporiate format, we can use training set to fit the model. The first model we choose is the random forest. 
+
+```{r}
+> modelfit1=randomForest(classe ~ ., data=training2)
+> predictions2=predict(modelfit1, testing2, type = "class")
+> confusionMatrix(predictions2, testing2$classe)
+
+Confusion Matrix and Statistics
+
+          Reference
+Prediction    A    B    C    D    E
+         A 2232    0    0    0    0
+         B    0 1518    3    0    0
+         C    0    0 1363    6    0
+         D    0    0    2 1280    2
+         E    0    0    0    0 1440
+
+Overall Statistics
+                                          
+               Accuracy : 0.9983          
+                 95% CI : (0.9972, 0.9991)
+    No Information Rate : 0.2845          
+    P-Value [Acc > NIR] : < 2.2e-16       
+                                          
+                  Kappa : 0.9979          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: A Class: B Class: C Class: D Class: E
+Sensitivity            1.0000   1.0000   0.9963   0.9953   0.9986
+Specificity            1.0000   0.9995   0.9991   0.9994   1.0000
+Pos Pred Value         1.0000   0.9980   0.9956   0.9969   1.0000
+Neg Pred Value         1.0000   1.0000   0.9992   0.9991   0.9997
+Prevalence             0.2845   0.1935   0.1744   0.1639   0.1838
+Detection Rate         0.2845   0.1935   0.1737   0.1631   0.1835
+Detection Prevalence   0.2845   0.1939   0.1745   0.1637   0.1835
+Balanced Accuracy      1.0000   0.9998   0.9977   0.9974   0.9993
+
+```
 
 ### Out of sample error
 
