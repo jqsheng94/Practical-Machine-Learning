@@ -58,7 +58,18 @@ missing=which(colSums(is.na(finaltesting1))>0)
 finaltesting2=finaltesting1[,-c(missing)]
 dim(finaltesting2)
 ```
-Now, we only have 58 variables in these three sets. 
+Now, we only have 59 variables in these three sets. But the first column is a 
+
+```{r}
+> training2=training2[c(-1)]
+> dim(training2)
+[1] 11776    58
+> testing2=testing2[c(-1)]
+> dim(testing2)
+[1] 7846   58
+> finaltesting=finaltesting2[c(-1, -58)]
+> dim(finaltesting)
+```
 
 ### Model selection and evaluation
 
