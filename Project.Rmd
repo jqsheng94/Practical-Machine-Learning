@@ -95,8 +95,8 @@ After rerange the data into proporiate format, we can use training set to fit th
 ```
 We can use this modelfit to predict the testing dataset to see accuracy of the prediction.
 ```{r}
-> predictions2=predict(modelfit1, testing2, type = "class")
-> confusionMatrix(predictions2, testing2$classe)
+> predictions1=predict(modelfit1, testing2, type = "class")
+> confusionMatrix(predictions1, testing2$classe)
 
 Confusion Matrix and Statistics
 
@@ -130,10 +130,18 @@ Detection Rate         0.2845   0.1935   0.1737   0.1631   0.1835
 Detection Prevalence   0.2845   0.1939   0.1745   0.1637   0.1835
 Balanced Accuracy      1.0000   0.9998   0.9977   0.9974   0.9993
 ```
+The accuracy is 99.83% which is pretty good prediction. In this case, we can use the random forest to predict the final prediction set with 20 cases. 
 
 ### Out of sample error
+The expected out-of-sample error is 100%-99.83% = 0.17%.
 
 ### Prediction 
+```{r}
+prediction2=predict(modelfit1, finaltesting, type = "class")
+prediction2
+
+[1] B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 
+```
 
 ### Conclusion
 
