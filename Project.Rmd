@@ -92,6 +92,9 @@ After rerange the data into proporiate format, we can use training set to fit th
 
 ```{r}
 > modelfit1=randomForest(classe ~ ., data=training2)
+```
+We can use this modelfit to predict the testing dataset to see accuracy of the prediction.
+```{r}
 > predictions2=predict(modelfit1, testing2, type = "class")
 > confusionMatrix(predictions2, testing2$classe)
 
@@ -126,7 +129,6 @@ Prevalence             0.2845   0.1935   0.1744   0.1639   0.1838
 Detection Rate         0.2845   0.1935   0.1737   0.1631   0.1835
 Detection Prevalence   0.2845   0.1939   0.1745   0.1637   0.1835
 Balanced Accuracy      1.0000   0.9998   0.9977   0.9974   0.9993
-
 ```
 
 ### Out of sample error
