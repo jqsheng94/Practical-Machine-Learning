@@ -41,9 +41,23 @@ nsvvariable=names(training1)
 nsvvariable
 
 finaltesting1=testing_document[,-badcols]
-
 ```
 
+
+```{r}
+missing=which(colSums(is.na(training1))>0)
+training2=training1[,-c(missing)]
+dim(training2)
+
+missing=which(colSums(is.na(testing1))>0)
+testing2=testing1[,-c(missing)]
+dim(testing2)
+
+
+missing=which(colSums(is.na(finaltesting1))>0)
+finaltesting2=finaltesting1[,-c(missing)]
+dim(finaltesting2)
+```
 
 
 ### Model selection and evaluation
