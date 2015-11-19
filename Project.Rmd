@@ -21,14 +21,27 @@ testing_document=read.csv(url(test_source), na.strings=c("NA","#DIV/0!",""))
 ```
 
 ### Cross Validation
-After loading the data, it shows that training set has 19622 rows of data and prediction set has 20 rows of data with 160 variables. In order to cross validate data, we split the training data into two seperate sub datasets, one is training set with 60% of data and another one is testing set with 40% of data.
+After loading the data, it shows that training set has 19622 rows of data and prediction set has 20 rows of data with 160 variables. In order to cross validate data, we use "createDataPartition" function to split the training data into two seperate sub datasets, one is training set with 60% of data and another one is testing set with 40% of data.
+
 ```{r}
 intrain=createDataPartition(training_document $classe, p=0.6, list=FALSE)
 training = training_document [intrain, ]
 testing= training_document [-intrain, ]
 dim(training); dim(testing)
 ```
-### Feagure Selection
+We will use training set to find the best model and use testing set to verify our findings, and use the model we selected according to training and testing set to predict the "classe" in the prediction set. 
+
+Some of the variables have no variability, use nearZeroVar function in caret package to identify the variables with very little variability and would not likely to become predictors. And then remove these variables. 
+
+```{r}
+badcols=nearZeroVar(training)
+training1=training[,-badcols]
+testing1=testing[,-badcols]
+nsvvariable=names(training1)
+nsvvariable
+```
+
+
 
 ### Model selection and evaluation
 
