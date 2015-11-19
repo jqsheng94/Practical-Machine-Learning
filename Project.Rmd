@@ -14,7 +14,7 @@ library(randomForest)
 ```
 ### Feagure Selection
 
-### Modeling 
+### Model selection and evaluation
 
 ### Out of sample error
 
