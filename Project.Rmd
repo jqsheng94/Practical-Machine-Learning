@@ -133,6 +133,8 @@ Balanced Accuracy      1.0000   0.9998   0.9977   0.9974   0.9993
 The accuracy is 99.83% which is pretty good prediction. In this case, we can use the random forest to predict the final prediction set with 20 cases. 
 
 ### Out of sample error
+The out of sample error is the error rate you get on new data set. In my case, it's the error rate after running the predict() function on the 4 testing set. 
+
 The expected out-of-sample error is 100%-99.83% = 0.17%.
 
 ### Prediction 
