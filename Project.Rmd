@@ -45,18 +45,20 @@ finaltesting1=testing_document[,-badcols]
 After removing these new zero variance variables, we narrow it down to 132 variables for training, testing and prediction set. But some of the variables have no single value in it, so next step is to remove these variables with missing values.
 
 ```{r}
-missing=which(colSums(is.na(training1))>0)
-training2=training1[,-c(missing)]
-dim(training2)
+> missing=which(colSums(is.na(training1))>0)
+> training2=training1[,-c(missing)]
+> dim(training2)
+ [1] 11776    59
+ 
+> missing=which(colSums(is.na(testing1))>0)
+> testing2=testing1[,-c(missing)]
+> dim(testing2)
+[1] 7846   59
 
-missing=which(colSums(is.na(testing1))>0)
-testing2=testing1[,-c(missing)]
-dim(testing2)
-
-
-missing=which(colSums(is.na(finaltesting1))>0)
-finaltesting2=finaltesting1[,-c(missing)]
-dim(finaltesting2)
+> missing=which(colSums(is.na(finaltesting1))>0)
+> finaltesting2=finaltesting1[,-c(missing)]
+> dim(finaltesting2)
+[1] 20 59
 ```
 Now, we only have 59 variables in these three sets. But the first column is a 
 
@@ -69,6 +71,7 @@ Now, we only have 59 variables in these three sets. But the first column is a
 [1] 7846   58
 > finaltesting=finaltesting2[c(-1, -58)]
 > dim(finaltesting)
+[1] 20 57
 ```
 
 ### Model selection and evaluation
