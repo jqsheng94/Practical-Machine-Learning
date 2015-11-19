@@ -12,6 +12,13 @@ library(rattle)
 library(rpart.plot)
 library(randomForest)
 ```
+First, we should load both training data and testing data into R. Remove error string and empty cells and replace with NA
+```{r}
+train_source="http://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+test_source="http://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+training_document=read.csv(url(train_source), na.strings=c("NA","#DIV/0!",""))
+testing_document=read.csv(url(test_source), na.strings=c("NA","#DIV/0!",""))
+```
 ### Feagure Selection
 
 ### Model selection and evaluation
