@@ -130,7 +130,7 @@ Detection Rate         0.2845   0.1935   0.1737   0.1631   0.1835
 Detection Prevalence   0.2845   0.1939   0.1745   0.1637   0.1835
 Balanced Accuracy      1.0000   0.9998   0.9977   0.9974   0.9993
 ```
-The accuracy is 99.83% which is pretty good prediction. In this case, we can use the random forest to predict the final prediction set with 20 cases. 
+The accuracy is 99.83% which is pretty good prediction. In this case, I can use the random forest to predict the final prediction set with 20 cases. 
 
 ### Out of sample error
 The out of sample error is the error rate you get on new data set. In my case, it's the error rate after running the predict() function on the 4 testing set. 
@@ -146,6 +146,6 @@ prediction2
 ```
 
 ### Conclusion
-The random forest algorithm appears to perf orm very good and accurate estimator training and testing dataset. So we use random forst to predict the final testing data. 
+The random forest algorithm appears to perform very accurate estimation for training and testing dataset. So in this project, I use random forest method to predict the final prediction data. 
 
 
