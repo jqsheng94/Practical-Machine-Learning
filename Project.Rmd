@@ -12,7 +12,8 @@ Before starting the project, load machine learning and plot packages that will b
 >library(rpart.plot)
 >library(randomForest)
 ```
-First, we should load both training data and testing data into R. Remove error string and empty cells and replace with NA
+First, we should load both training data and testing data into R. Remove all the error string "#DIV/0!" and all the empty cells and replace with NA. 
+
 ```{r}
 train_source="http://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
 test_source="http://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
@@ -23,9 +24,8 @@ View(training_document)
 View(testing_document)
 [1]  20 160
 ```
-
 ### Cross Validation
-After loading the data, it shows that training set has 19622 rows of data and prediction set has 20 rows of data with 160 variables. In order to cross validate data, we use "createDataPartition" function to split the training data into two seperate sub datasets, one is training set with 60% of data and another one is testing set with 40% of data.
+After loading the data, it shows that training set has 19622 rows and prediction set has 20 rows of data with 160 variables. In order to cross validate the model, we use "createDataPartition" function to split the training data into two seperate sub datasets, one is  "training" set with 60% of data and another one is "testing" set with 40% of data.
 
 ```{r}
 intrain=createDataPartition(training_document $classe, p=0.6, list=FALSE)
@@ -35,7 +35,7 @@ dim(training); dim(testing)
 [1] 11776   160
 [1] 7846  160
 ```
-We will use training set to find the best model and use testing set to verify our findings, and use the model we selected according to training and testing set to predict the "classe" in the prediction set. 
+I will use training set to find the best model and use testing set to verify our findings, and use the model we selected according to training and testing set to predict the "classe" in the prediction set. 
 
 Some of the variables have no variability, use nearZeroVar function in caret package to identify the variables with very little variability and would not likely to become predictors. And then remove these variables. 
 
@@ -55,7 +55,7 @@ Some of the variables have no variability, use nearZeroVar function in caret pac
 > dim(finaltesting1)
 [1]  20 132
 ```
-After removing these new zero variance variables, we narrow it down to 132 variables for training, testing and prediction set. But some of the variables have no single value in it, so next step is to remove these variables with missing values.
+After removing these new zero variance variables, I narrow it down to 132 variables for training, testing and prediction set. But some of the variables have no single value in it, so the next step is to remove these variables with missing values.
 
 ```{r}
 > missing=which(colSums(is.na(training1))>0)
@@ -73,7 +73,7 @@ After removing these new zero variance variables, we narrow it down to 132 varia
 > dim(finaltesting2)
 [1] 20 59
 ```
-Now, we only have 59 variables in these three sets. But the first column is a 
+Now, we only have 59 variables in these three sets. But the first column is a just increasing natural numbers so we can remove the first column. And for the prediciton set, we can also remove the last column and use our final model to predict classe variable. 
 
 ```{r}
 > training2=training2[c(-1)]
@@ -146,4 +146,6 @@ prediction2
 ```
 
 ### Conclusion
+The random forest algorithm appears to perf orm very good and accurate estimator training and testing dataset. So we use random forst to predict the final testing data. 
+
 
