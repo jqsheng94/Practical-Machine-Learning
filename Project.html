@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Practical-machine-learning by jqsheng94</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Practical-machine-learning</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="https://github.com/jqsheng94/Practical-Machine-Learning" class="btn">View on GitHub</a>
+      <a href="https://github.com/jqsheng94/Practical-Machine-Learning/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/jqsheng94/Practical-Machine-Learning/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h2>
+<a id="pratical-machines-learning-project-assignment-writeup" class="anchor" href="#pratical-machines-learning-project-assignment-writeup" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pratical Machines Learning Project-Assignment Writeup</h2>
+
+<p>Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it.This project will use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. </p>
+
+<h3>
+<a id="data-cleaning" class="anchor" href="#data-cleaning" aria-hidden="true"><span class="octicon octicon-link"></span></a>Data Cleaning</h3>
+
+<p>Before starting the project, load machine learning and plot packages that will be used in this project. </p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-k">&gt;</span>library(<span class="pl-smi">caret</span>)
+<span class="pl-k">&gt;</span>library(<span class="pl-smi">rpart</span>)
+<span class="pl-k">&gt;</span>library(<span class="pl-smi">rattle</span>)
+<span class="pl-k">&gt;</span>library(<span class="pl-smi">rpart.plot</span>)
+<span class="pl-k">&gt;</span>library(<span class="pl-smi">randomForest</span>)</pre></div>
+
+<p>First, we should load both training data and testing data into R. Remove all the error string "#DIV/0!" and all the empty cells and replace with NA. </p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-v">train_source</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>http://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv<span class="pl-pds">"</span></span>
+<span class="pl-v">test_source</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>http://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv<span class="pl-pds">"</span></span>
+<span class="pl-v">training_document</span><span class="pl-k">=</span>read.csv(url(<span class="pl-smi">train_source</span>), <span class="pl-v">na.strings</span><span class="pl-k">=</span>c(<span class="pl-s"><span class="pl-pds">"</span>NA<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>#DIV/0!<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>))
+<span class="pl-v">testing_document</span><span class="pl-k">=</span>read.csv(url(<span class="pl-smi">test_source</span>), <span class="pl-v">na.strings</span><span class="pl-k">=</span>c(<span class="pl-s"><span class="pl-pds">"</span>NA<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>#DIV/0!<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>))
+View(<span class="pl-smi">training_document</span>)
+[<span class="pl-c1">1</span>] <span class="pl-c1">19622</span>   <span class="pl-c1">160</span>
+View(<span class="pl-smi">testing_document</span>)
+[<span class="pl-c1">1</span>]  <span class="pl-c1">20</span> <span class="pl-c1">160</span></pre></div>
+
+<h3>
+<a id="cross-validation" class="anchor" href="#cross-validation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cross Validation</h3>
+
+<p>After loading the data, it shows that training set has 19622 rows and prediction set has 20 rows of data with 160 variables. In order to cross validate the model, we use "createDataPartition" function to split the training data into two seperate sub datasets, one is  "training" set with 60% of data and another one is "testing" set with 40% of data.</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-v">intrain</span><span class="pl-k">=</span>createDataPartition(<span class="pl-smi">training_document</span> <span class="pl-k">$</span><span class="pl-smi">classe</span>, <span class="pl-v">p</span><span class="pl-k">=</span><span class="pl-c1">0.6</span>, <span class="pl-v">list</span><span class="pl-k">=</span><span class="pl-c1">FALSE</span>)
+<span class="pl-v">training</span> <span class="pl-k">=</span> <span class="pl-smi">training_document</span> [<span class="pl-smi">intrain</span>, ]
+<span class="pl-v">testing</span><span class="pl-k">=</span> <span class="pl-smi">training_document</span> [<span class="pl-k">-</span><span class="pl-smi">intrain</span>, ]
+dim(<span class="pl-smi">training</span>); dim(<span class="pl-smi">testing</span>)
+[<span class="pl-c1">1</span>] <span class="pl-c1">11776</span>   <span class="pl-c1">160</span>
+[<span class="pl-c1">1</span>] <span class="pl-c1">7846</span>  <span class="pl-c1">160</span></pre></div>
+
+<p>I will use training set to find the best model and use testing set to verify our findings, and use the model we selected according to training and testing set to predict the "classe" in the prediction set. </p>
+
+<p>Some of the variables have no variability, use nearZeroVar function in caret package to identify the variables with very little variability and would not likely to become predictors. And then remove these variables. </p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-k">&gt;</span> <span class="pl-v">badcols</span><span class="pl-k">=</span>nearZeroVar(<span class="pl-smi">training</span>)
+<span class="pl-k">&gt;</span> <span class="pl-v">training1</span><span class="pl-k">=</span><span class="pl-smi">training</span>[,<span class="pl-k">-</span><span class="pl-smi">badcols</span>]
+<span class="pl-k">&gt;</span> <span class="pl-v">testing1</span><span class="pl-k">=</span><span class="pl-smi">testing</span>[,<span class="pl-k">-</span><span class="pl-smi">badcols</span>]
+<span class="pl-k">&gt;</span> <span class="pl-v">nsvvariable</span><span class="pl-k">=</span>names(<span class="pl-smi">training1</span>)
+<span class="pl-k">&gt;</span> <span class="pl-smi">nsvvariable</span>
+<span class="pl-k">&gt;</span> dim(<span class="pl-smi">training1</span>)
+<span class="pl-k">&gt;</span> dim(<span class="pl-smi">testing1</span>)
+[<span class="pl-c1">1</span>] <span class="pl-c1">11776</span>   <span class="pl-c1">132</span>
+[<span class="pl-c1">1</span>] <span class="pl-c1">7846</span>  <span class="pl-c1">132</span>
+
+
+<span class="pl-k">&gt;</span> <span class="pl-v">finaltesting1</span><span class="pl-k">=</span><span class="pl-smi">testing_document</span>[,<span class="pl-k">-</span><span class="pl-smi">badcols</span>]
+<span class="pl-k">&gt;</span> dim(<span class="pl-smi">finaltesting1</span>)
+[<span class="pl-c1">1</span>]  <span class="pl-c1">20</span> <span class="pl-c1">132</span></pre></div>
+
+<p>After removing these new zero variance variables, I narrow it down to 132 variables for training, testing and prediction set. But some of the variables have no single value in it, so the next step is to remove these variables with missing values.</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-k">&gt;</span> <span class="pl-v">missing</span><span class="pl-k">=</span>which(colSums(is.na(<span class="pl-smi">training1</span>))<span class="pl-k">&gt;</span><span class="pl-c1">0</span>)
+<span class="pl-k">&gt;</span> <span class="pl-v">training2</span><span class="pl-k">=</span><span class="pl-smi">training1</span>[,<span class="pl-k">-</span>c(<span class="pl-smi">missing</span>)]
+<span class="pl-k">&gt;</span> dim(<span class="pl-smi">training2</span>)
+ [<span class="pl-c1">1</span>] <span class="pl-c1">11776</span>    <span class="pl-c1">59</span>
+
+<span class="pl-k">&gt;</span> <span class="pl-v">missing</span><span class="pl-k">=</span>which(colSums(is.na(<span class="pl-smi">testing1</span>))<span class="pl-k">&gt;</span><span class="pl-c1">0</span>)
+<span class="pl-k">&gt;</span> <span class="pl-v">testing2</span><span class="pl-k">=</span><span class="pl-smi">testing1</span>[,<span class="pl-k">-</span>c(<span class="pl-smi">missing</span>)]
+<span class="pl-k">&gt;</span> dim(<span class="pl-smi">testing2</span>)
+[<span class="pl-c1">1</span>] <span class="pl-c1">7846</span>   <span class="pl-c1">59</span>
+
+<span class="pl-k">&gt;</span> <span class="pl-v">missing</span><span class="pl-k">=</span>which(colSums(is.na(<span class="pl-smi">finaltesting1</span>))<span class="pl-k">&gt;</span><span class="pl-c1">0</span>)
+<span class="pl-k">&gt;</span> <span class="pl-v">finaltesting2</span><span class="pl-k">=</span><span class="pl-smi">finaltesting1</span>[,<span class="pl-k">-</span>c(<span class="pl-smi">missing</span>)]
+<span class="pl-k">&gt;</span> dim(<span class="pl-smi">finaltesting2</span>)
+[<span class="pl-c1">1</span>] <span class="pl-c1">20</span> <span class="pl-c1">59</span></pre></div>
+
+<p>Now, we only have 59 variables in these three sets. But the first column is a just increasing natural numbers so we can remove the first column. And for the prediciton set, we can also remove the last column and use our final model to predict classe variable. </p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-k">&gt;</span> <span class="pl-v">training2</span><span class="pl-k">=</span><span class="pl-smi">training2</span>[c(<span class="pl-k">-</span><span class="pl-c1">1</span>)]
+<span class="pl-k">&gt;</span> dim(<span class="pl-smi">training2</span>)
+[<span class="pl-c1">1</span>] <span class="pl-c1">11776</span>    <span class="pl-c1">58</span>
+<span class="pl-k">&gt;</span> <span class="pl-v">testing2</span><span class="pl-k">=</span><span class="pl-smi">testing2</span>[c(<span class="pl-k">-</span><span class="pl-c1">1</span>)]
+<span class="pl-k">&gt;</span> dim(<span class="pl-smi">testing2</span>)
+[<span class="pl-c1">1</span>] <span class="pl-c1">7846</span>   <span class="pl-c1">58</span>
+<span class="pl-k">&gt;</span> <span class="pl-v">finaltesting</span><span class="pl-k">=</span><span class="pl-smi">finaltesting2</span>[c(<span class="pl-k">-</span><span class="pl-c1">1</span>, <span class="pl-k">-</span><span class="pl-c1">58</span>)]
+<span class="pl-k">&gt;</span> dim(<span class="pl-smi">finaltesting</span>)
+[<span class="pl-c1">1</span>] <span class="pl-c1">20</span> <span class="pl-c1">57</span></pre></div>
+
+<h3>
+<a id="model-selection-and-evaluation" class="anchor" href="#model-selection-and-evaluation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Model selection and evaluation</h3>
+
+<p>After rerange the data into proporiate format, we can use training set to fit the model. The first model we choose is the random forest. </p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-k">&gt;</span> <span class="pl-v">modelfit1</span><span class="pl-k">=</span>randomForest(<span class="pl-smi">classe</span> <span class="pl-k">~</span> ., <span class="pl-v">data</span><span class="pl-k">=</span><span class="pl-smi">training2</span>)</pre></div>
+
+<p>We can use this modelfit to predict the testing dataset to see accuracy of the prediction.</p>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-k">&gt;</span> <span class="pl-v">predictions1</span><span class="pl-k">=</span>predict(<span class="pl-smi">modelfit1</span>, <span class="pl-smi">testing2</span>, <span class="pl-v">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>class<span class="pl-pds">"</span></span>)
+<span class="pl-k">&gt;</span> confusionMatrix(<span class="pl-smi">predictions1</span>, <span class="pl-smi">testing2</span><span class="pl-k">$</span><span class="pl-smi">classe</span>)
+
+<span class="pl-smi">Confusion</span> <span class="pl-smi">Matrix</span> <span class="pl-smi">and</span> <span class="pl-smi">Statistics</span>
+
+          <span class="pl-smi">Reference</span>
+<span class="pl-smi">Prediction</span>    <span class="pl-smi">A</span>    <span class="pl-smi">B</span>    <span class="pl-smi">C</span>    <span class="pl-smi">D</span>    <span class="pl-smi">E</span>
+         <span class="pl-smi">A</span> <span class="pl-c1">2232</span>    <span class="pl-c1">0</span>    <span class="pl-c1">0</span>    <span class="pl-c1">0</span>    <span class="pl-c1">0</span>
+         <span class="pl-smi">B</span>    <span class="pl-c1">0</span> <span class="pl-c1">1518</span>    <span class="pl-c1">3</span>    <span class="pl-c1">0</span>    <span class="pl-c1">0</span>
+         <span class="pl-smi">C</span>    <span class="pl-c1">0</span>    <span class="pl-c1">0</span> <span class="pl-c1">1363</span>    <span class="pl-c1">6</span>    <span class="pl-c1">0</span>
+         <span class="pl-smi">D</span>    <span class="pl-c1">0</span>    <span class="pl-c1">0</span>    <span class="pl-c1">2</span> <span class="pl-c1">1280</span>    <span class="pl-c1">2</span>
+         <span class="pl-smi">E</span>    <span class="pl-c1">0</span>    <span class="pl-c1">0</span>    <span class="pl-c1">0</span>    <span class="pl-c1">0</span> <span class="pl-c1">1440</span>
+
+<span class="pl-smi">Overall</span> <span class="pl-smi">Statistics</span>
+
+               <span class="pl-smi">Accuracy</span> <span class="pl-k">:</span> <span class="pl-c1">0.9983</span>          
+                 <span class="pl-c1">95</span>% <span class="pl-smi">CI</span> <span class="pl-k">:</span> (<span class="pl-c1">0.9972</span>, <span class="pl-c1">0.9991</span>)
+    <span class="pl-smi">No</span> <span class="pl-smi">Information</span> <span class="pl-smi">Rate</span> <span class="pl-k">:</span> <span class="pl-c1">0.2845</span>          
+    <span class="pl-smi">P</span><span class="pl-k">-</span><span class="pl-smi">Value</span> [<span class="pl-smi">Acc</span> <span class="pl-k">&gt;</span> <span class="pl-smi">NIR</span>] <span class="pl-k">:</span> <span class="pl-k">&lt;</span> <span class="pl-c1">2.2e-16</span>       
+
+                  <span class="pl-smi">Kappa</span> <span class="pl-k">:</span> <span class="pl-c1">0.9979</span>          
+ <span class="pl-smi">Mcnemar</span><span class="pl-s"><span class="pl-pds">'</span>s Test P-Value : NA              </span>
+<span class="pl-s"></span>
+<span class="pl-s">Statistics by Class:</span>
+<span class="pl-s"></span>
+<span class="pl-s">                     Class: A Class: B Class: C Class: D Class: E</span>
+<span class="pl-s">Sensitivity            1.0000   1.0000   0.9963   0.9953   0.9986</span>
+<span class="pl-s">Specificity            1.0000   0.9995   0.9991   0.9994   1.0000</span>
+<span class="pl-s">Pos Pred Value         1.0000   0.9980   0.9956   0.9969   1.0000</span>
+<span class="pl-s">Neg Pred Value         1.0000   1.0000   0.9992   0.9991   0.9997</span>
+<span class="pl-s">Prevalence             0.2845   0.1935   0.1744   0.1639   0.1838</span>
+<span class="pl-s">Detection Rate         0.2845   0.1935   0.1737   0.1631   0.1835</span>
+<span class="pl-s">Detection Prevalence   0.2845   0.1939   0.1745   0.1637   0.1835</span>
+<span class="pl-s">Balanced Accuracy      1.0000   0.9998   0.9977   0.9974   0.9993</span></pre></div>
+
+<p>The accuracy is 99.83% which is pretty good prediction. In this case, I can use the random forest to predict the final prediction set with 20 cases. </p>
+
+<h3>
+<a id="out-of-sample-error" class="anchor" href="#out-of-sample-error" aria-hidden="true"><span class="octicon octicon-link"></span></a>Out of sample error</h3>
+
+<p>The out of sample error is the error rate you get on new data set. In my case, it's the error rate after running the predict() function on the 4 testing set. </p>
+
+<p>The expected out-of-sample error is 100%-99.83% = 0.17%.</p>
+
+<h3>
+<a id="prediction" class="anchor" href="#prediction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prediction</h3>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-v">prediction2</span><span class="pl-k">=</span>predict(<span class="pl-smi">modelfit1</span>, <span class="pl-smi">finaltesting</span>, <span class="pl-v">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>class<span class="pl-pds">"</span></span>)
+<span class="pl-smi">prediction2</span>
+
+[<span class="pl-c1">1</span>] <span class="pl-smi">B</span>  <span class="pl-smi">A</span>  <span class="pl-smi">B</span>  <span class="pl-smi">A</span>  <span class="pl-smi">A</span>  <span class="pl-smi">E</span>  <span class="pl-smi">D</span>  <span class="pl-smi">B</span>  <span class="pl-smi">A</span>  <span class="pl-smi">A</span>  <span class="pl-smi">B</span>  <span class="pl-smi">C</span>  <span class="pl-smi">B</span>  <span class="pl-smi">A</span>  <span class="pl-smi">E</span>  <span class="pl-smi">E</span>  <span class="pl-smi">A</span>  <span class="pl-smi">B</span>  <span class="pl-smi">B</span>  <span class="pl-smi">B</span> </pre></div>
+
+<h3>
+<a id="conclusion" class="anchor" href="#conclusion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conclusion</h3>
+
+<p>The random forest algorithm appears to perform very accurate estimation for training and testing dataset. So in this project, I use random forest method to predict the final prediction data. </p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/jqsheng94/Practical-Machine-Learning">Practical-machine-learning</a> is maintained by <a href="https://github.com/jqsheng94">jqsheng94</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
