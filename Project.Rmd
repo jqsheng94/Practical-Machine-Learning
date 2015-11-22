@@ -7,9 +7,7 @@ Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible t
 Before starting the project, load machine learning and plot packages that will be used in this project. 
 ```{r}
 >library(caret)
->library(rpart)
 >library(rattle)
->library(rpart.plot)
 >library(randomForest)
 ```
 First, we should load both training data and testing data into R. Remove all the error string "#DIV/0!" and all the empty cells and replace with NA. 
