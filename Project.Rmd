@@ -53,7 +53,7 @@ Some of the variables have no variability, use nearZeroVar function in caret pac
 > dim(finaltesting1)
 [1]  20 132
 ```
-After removing these new zero variance variables, I narrow it down to 132 variables for training, testing and prediction set. But some of the variables have no single value in it, so the next step is to remove these variables with missing values.
+After removing these new zero variance variables, I narrow it down to 132 variables for training, testing and prediction set. But some of the variables have no single value in it. So the next step is to remove these variables with missing values.
 
 ```{r}
 > missing=which(colSums(is.na(training1))>0)
@@ -91,12 +91,13 @@ After rerange the data into proporiate format, we can use training set to fit th
 ```{r}
 > modelfit1=randomForest(classe ~ ., data=training2)
 ```
-We can use this modelfit to predict the testing dataset to see accuracy of the prediction.
+We can use this modelfit to predict the testing dataset to see accuracy of the prediction. Given two variables (prediction and observation), the mean squared error and R-squared are calculated. For two factors, the overall agreement rate and Kappa are determined.
 ```{r}
 > postResample(predictions1, testing2$classe)
  Accuracy     Kappa 
 0.9978333 0.9972596 
 ```
+The accuracy is 0..997833 which is quite close to 1.
 
 ```{r}
 > predictions1=predict(modelfit1, testing2, type = "class")
@@ -143,7 +144,7 @@ The expected out-of-sample error is 100%-99.83% = 0.17%.
 
 ### Prediction 
 ```{r}
-prediction2=predict(modelfit1, finaltesting, type = "class")
+prediction2=predict(modelfit1, finaltesting2, type = "class")
 prediction2
 
 [1] B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 
