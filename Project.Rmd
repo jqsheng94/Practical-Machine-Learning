@@ -95,6 +95,12 @@ After rerange the data into proporiate format, we can use training set to fit th
 ```
 We can use this modelfit to predict the testing dataset to see accuracy of the prediction.
 ```{r}
+> postResample(predictions1, testing2$classe)
+ Accuracy     Kappa 
+0.9978333 0.9972596 
+```
+
+```{r}
 > predictions1=predict(modelfit1, testing2, type = "class")
 > confusionMatrix(predictions1, testing2$classe)
 
