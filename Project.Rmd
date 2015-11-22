@@ -53,7 +53,7 @@ Some of the variables have no variability, use nearZeroVar function in caret pac
 > dim(finaltesting1)
 [1]  20 132
 ```
-After removing these new zero variance variables, I narrow it down to 132 variables for training, testing and prediction set. But some of the variables have no single value in it. So the next step is to remove these variables with missing values.
+After removing these new zero variance variables, I narrow it down to 132 variables for training, testing and prediction set. But some of the variables have no single value in it. I also checked the columns with NA values. In the training, testing and final prediction datasets. Columns are either all with values or without any values. In this case, I don't need to choose the variables with a lot of missing values, the next step is to remove all the variables with missing values.
 
 ```{r}
 > missing=which(colSums(is.na(training1))>0)
